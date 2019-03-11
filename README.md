@@ -5,8 +5,15 @@ This set up is totally NOT recommended for production workloads.
 Note: As I mentioned in [References](#References) this work is based in the containers build by [Big Data Europe](https://github.com/big-data-europe)
 
 ## Set up Hive & PrestoDB locally (isolated)
-Because our purpose is just to experiment, to accelerate the set up we could use a docker images, so the first step is to pull the docker images and create the cluster based on those images.
-To do that we'll execute the following command from the root of this project(*):
+Because our purpose is just to experiment, to accelerate the set up we could use docker images (to be accurate, docker-compose).
+First of all we need to clone this repo:
+```
+git@github.com:jordicenzano/hive-presto-tutorial.git
+cd hive-presto-tutorial
+```
+
+The first step is to pull the docker images and start the cluster based on those images.
+To do that we'll execute the following command **from the root of this project**(*):
 ```
 docker-compose up 
 ```
@@ -25,9 +32,9 @@ In our example we'll be analyzing the following file [temp-data.csv](temp-data.c
 That file contains the temperature measured every hour from a weather station for all 2018.
 
 ## Analyzing data
-The first step to use Presto is to create the table with the data to analyze, we are going to use Hive, execute the following command to open shell into a cluster machine:
+The first step to use is to create the table with the data to analyze, we are going to use Hive for that, execute the following command to open shell into a cluster machine:
 ```
-docker-compose exec resourcemanager bash
+docker-compose exec hive-server bash
 ```
 Copy the file to HDFS:
 ```
@@ -49,12 +56,12 @@ We can check if the data is accessible doing:
 We should see the list of temperatures.
 
 ### Querying in presto
-First lets execute a presto client:
+Now lets execute a presto client:
 ```
 cd presto_client
 ./presto.jar --server localhost:8080 --catalog hive --schema default
 ```
-Now from that shell we can query that table, for instance:
+Finally from that shell we can query that table, for instance:
 ```
 # select * from horlytemp where temp > 80;
 ```
@@ -70,7 +77,7 @@ We should see something like:
 ```
 
 ### Clean up
-Stop the docker containers by doing
+Stop the docker containers by doing:
 ```
 docker-compose down
 ```
